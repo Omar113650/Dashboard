@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 
+// Mongoose Schema
 const newDealSchema = new mongoose.Schema(
   {
     customer: {
@@ -68,13 +69,13 @@ const newDealSchema = new mongoose.Schema(
 
     RoomAccess: {
       type: String,
-      enum: [],
+      enum: ["Elevator", "Stairs", "Ramp"], // ✅ ممكن تعدلها حسب النظام عندك
       required: true,
     },
 
     Progress: {
       type: String,
-      enum: [],
+      enum: ["Pending", "InProgress", "Completed"], // ✅ ممكن تعدلها حسب النظام عندك
     },
 
     Price: {
@@ -87,23 +88,32 @@ const newDealSchema = new mongoose.Schema(
   }
 );
 
+// Model
 const Deal = mongoose.model("Deal", newDealSchema);
 
+// Joi Validation
 function validateCreateDeal(data) {
   const schema = Joi.object({
-    address: Joi.object({
+    customer: Joi.string().required(),
+
+    Address: Joi.object({
       street: Joi.string().min(5).max(100).required(),
       city: Joi.string().min(2).max(100).required(),
       state: Joi.string().min(2).max(100).required(),
       zipCode: Joi.string().min(4).max(15).required(),
     }).required(),
 
+    RoomImage: Joi.object({
+      url: Joi.string().uri().allow(""),
+      publicId: Joi.string().allow(null, ""),
+    }),
+
     RoomArea: Joi.number().min(1).required(),
-    umberOfPeople: Joi.number().min(1).required(),
+    numberOfPeople: Joi.number().min(1).required(),
     AppointmentDate: Joi.date().iso().required(),
     SpecialInstructions: Joi.string().min(20).max(100).required(),
-    RoomAccess: Joi.string().valid().required(),
-    Progress: Joi.string().valid(),
+    RoomAccess: Joi.string().valid("Elevator", "Stairs", "Ramp").required(),
+    Progress: Joi.string().valid("Pending", "InProgress", "Completed"),
     Price: Joi.number().min(0).required(),
   });
 

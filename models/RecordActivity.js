@@ -39,5 +39,5 @@ function validateCreateActivity(data) {
 
 module.exports = {
   RecordActivity,
-  validateCreateActivity,
+  validateCreateActivity
 };

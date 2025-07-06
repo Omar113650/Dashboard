@@ -80,6 +80,10 @@ function ValidationCreateCustomer(obj) {
       state: Joi.string().min(2).max(100).required(),
       zipCode: Joi.string().min(4).max(15).required(),
     }).required(),
+      Avatar: Joi.object({
+      url: Joi.string().uri().allow(""),
+      publicId: Joi.string().allow(null),
+    }).optional(), // 👈 أضف ده
   });
 
   return schema.validate(obj);
