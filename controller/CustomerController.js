@@ -3,9 +3,8 @@ const { Customer, ValidationCreateCustomer } = require("../models/Customer");
 const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
-  cloudinaryRemoveMultipleImage,
 } = require("../utils/Cloudinary");
-const logger =  require("../utils/logger")
+const logger = require("../utils/logger");
 const path = require("path");
 const fs = require("fs");
 // @desc Get all customers
@@ -31,14 +30,12 @@ module.exports.AddCustomer = asyncHandler(async (req, res) => {
 
   const result = await cloudinaryUploadImage(req.file.buffer);
 
-if (!result.secure_url) {
-  fs.unlinkSync(imagePath);
-  logger.error("Cloudinary upload failed: %o", result);
-  return res.status(500).json({ message: "Image upload to cloud failed" });
-}
+  if (!result.secure_url) {
+    fs.unlinkSync(imagePath);
+    logger.error("Cloudinary upload failed: %o", result);
+    return res.status(500).json({ message: "Image upload to cloud failed" });
+  }
 
-
-  // 5. إنشاء العميل
   const newCustomer = await Customer.create({
     ...req.body,
     Avatar: {
@@ -47,10 +44,8 @@ if (!result.secure_url) {
     },
   });
 
-  // 6. حذف الصورة من السيرفر المحلي بعد الرفع
   fs.unlinkSync(imagePath);
 
-  // 7. الرد بالنجاح
   res.status(201).json({ customer: newCustomer, message: "Success" });
 });
 
@@ -85,14 +80,11 @@ module.exports.UpdateCustomer = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Customer not found" });
   }
 
-  // لو فيه صورة جديدة
   if (req.file) {
-    // حذف الصورة القديمة من Cloudinary (لو موجودة)
     if (customer.Avatar?.publicId) {
       await cloudinaryRemoveImage(customer.Avatar.publicId);
     }
 
-    // رفع الصورة الجديدة
     const uploaded = await cloudinaryUploadImage(req.file.buffer);
     if (!uploaded?.secure_url) {
       return res.status(500).json({ message: "Image upload failed" });
@@ -112,7 +104,6 @@ module.exports.UpdateCustomer = asyncHandler(async (req, res) => {
 
   res.status(200).json({ status: "Success", customer: updatedCustomer });
 });
-
 
 // @desc Count customers
 // @route GET /api/customers/count

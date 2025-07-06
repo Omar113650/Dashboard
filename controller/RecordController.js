@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const {
   RecordActivity,
   validateCreateActivity,
@@ -87,12 +86,10 @@ module.exports.UpdateRecordActivity = asyncHandler(async (req, res) => {
   const updatedData = { ...req.body };
 
   if (req.file) {
-    // Remove old image if exists
     if (existingRecord.Image?.publicId) {
       await cloudinaryRemoveImage(existingRecord.Image.publicId);
     }
 
-    // Upload new image
     const uploaded = await cloudinaryUploadImage(req.file.buffer);
     if (!uploaded?.secure_url) {
       return res.status(500).json({ message: "Image upload failed" });

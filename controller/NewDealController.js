@@ -1,10 +1,12 @@
-const mongoose = require("mongoose");
 const { validateCreateDeal, Deal } = require("../models/NewDeal");
 const asyncHandler = require("express-async-handler");
 const path = require("path");
 const logger = require("../utils/logger");
 const fs = require("fs");
-const { cloudinaryUploadImage, cloudinaryRemoveImage } = require("../utils/Cloudinary");
+const {
+  cloudinaryUploadImage,
+  cloudinaryRemoveImage,
+} = require("../utils/Cloudinary");
 
 // @desc Get all Deals
 // @route GET /api/deals
@@ -27,7 +29,6 @@ module.exports.AddDeal = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: error.details[0].message });
   }
 
-  // رفع الصورة إلى Cloudinary
   const result = await cloudinaryUploadImage(req.file.buffer);
 
   if (!result.secure_url) {
@@ -47,7 +48,7 @@ module.exports.AddDeal = asyncHandler(async (req, res) => {
 });
 
 // @desc Delete Deal
-// @route DELETE /api/deals/:id
+// @route DELETE /api/deal/:id
 // @access Private
 module.exports.DeleteDeal = asyncHandler(async (req, res) => {
   const dealId = req.params.id;
@@ -60,7 +61,6 @@ module.exports.DeleteDeal = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Deal not found" });
   }
 
-  // حذف الصورة من Cloudinary
   if (deletedDeal?.RoomImage?.publicId) {
     await cloudinaryRemoveImage(deletedDeal.RoomImage.publicId);
   }
@@ -80,14 +80,11 @@ module.exports.UpdateDeal = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Deal not found" });
   }
 
-  // لو فيه صورة جديدة مرفوعة
   if (req.file) {
-    // حذف الصورة القديمة من Cloudinary
     if (existingDeal.RoomImage?.publicId) {
       await cloudinaryRemoveImage(existingDeal.RoomImage.publicId);
     }
 
-    // رفع الصورة الجديدة
     const uploaded = await cloudinaryUploadImage(req.file.buffer);
     if (!uploaded?.secure_url) {
       return res.status(500).json({ message: "Image upload failed" });

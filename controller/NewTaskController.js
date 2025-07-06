@@ -1,6 +1,4 @@
-const mongoose = require("mongoose");
-const {NewTask,
-  validateCreateTask} = require("../models/NewTask");
+const { NewTask, validateCreateTask } = require("../models/NewTask");
 const asyncHandler = require("express-async-handler");
 
 // @desc Get all Task
@@ -60,7 +58,9 @@ module.exports.UpdateDeal = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Task not found" });
   }
 
-  res.status(200).json({ message: "Task updated successfully", deal: updatedTask });
+  res
+    .status(200)
+    .json({ message: "Task updated successfully", deal: updatedTask });
 });
 
 // @desc Count Deals
@@ -70,4 +70,3 @@ module.exports.CountTask = asyncHandler(async (req, res) => {
   const count = await NewTask.countDocuments();
   res.json({ count });
 });
-
