@@ -1,18 +1,27 @@
-const router = require("express").Router();
+import express from "express";
+const router = express.Router();
 
-const {
+import {
   GetRecordActivity,
   CountRecordActivity,
   UpdateRecordActivity,
   DeleteRecordActivity,
   AddRecordActivity,
-} = require("../controller/RecordController");
-const upload = require("../utils/multer");
-const ValidateID = require("../middleware/ValidateId");
+} from "../controller/RecordController.js";
+
+import upload from "../utils/multer.js";
+import { ValidateID } from "../middleware/ValidateId.js";
+
 router.get("/count", CountRecordActivity);
 
-router.route("/").get(GetRecordActivity).post(upload.single("Image"),AddRecordActivity);
+router
+  .route("/")
+  .get(GetRecordActivity)
+  .post(upload.single("Image"), AddRecordActivity);
 
-router.route("/:id").put(ValidateID,UpdateRecordActivity).delete(ValidateID,DeleteRecordActivity);
+router
+  .route("/:id")
+  .put(ValidateID, UpdateRecordActivity)
+  .delete(ValidateID, DeleteRecordActivity);
 
-module.exports = router;
+export default router;

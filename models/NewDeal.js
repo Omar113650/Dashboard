@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import mongoose from "mongoose";
+import Joi from "joi";
 
 // Mongoose Schema
 const newDealSchema = new mongoose.Schema(
@@ -69,13 +69,13 @@ const newDealSchema = new mongoose.Schema(
 
     RoomAccess: {
       type: String,
-      enum: ["Elevator", "Stairs", "Ramp"], // ✅ ممكن تعدلها حسب النظام عندك
+      enum: ["Elevator", "Stairs", "Ramp"],
       required: true,
     },
 
     Progress: {
       type: String,
-      enum: ["Pending", "InProgress", "Completed"], // ✅ ممكن تعدلها حسب النظام عندك
+      enum: ["Pending", "InProgress", "Completed"],
     },
 
     Price: {
@@ -120,7 +120,4 @@ function validateCreateDeal(data) {
   return schema.validate(data);
 }
 
-module.exports = {
-  validateCreateDeal,
-  Deal,
-};
+export { validateCreateDeal, Deal };

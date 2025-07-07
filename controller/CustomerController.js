@@ -1,24 +1,61 @@
-const asyncHandler = require("express-async-handler");
-const { Customer, ValidationCreateCustomer } = require("../models/Customer");
-const {
+// controller/CustomerController.js
+
+import asyncHandler from "express-async-handler";
+import { Customer, ValidationCreateCustomer } from "../models/Customer.js";
+import {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
-} = require("../utils/Cloudinary");
-const logger = require("../utils/logger");
-const path = require("path");
-const fs = require("fs");
+} from "../utils/Cloudinary.js";
+
+import logger from "../utils/logger.js";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+// ⛔ لأننا بنستخدم ES Modules، لازم نستخدم __dirname بالطريقة دي
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // @desc Get all customers
 // @route GET /api/customers
 // @access Private
-module.exports.GetCustomer = asyncHandler(async (req, res) => {
-  const customers = await Customer.find();
+export const GetCustomer = asyncHandler(async (req, res) => {
+  const query = {};
+
+  // ✅ تقدر تستخدم كل الشروط مع بعض، مش لازم else if
+  if (req.query.Phone) {
+    query.Phone = req.query.Phone;
+  }
+
+  if (req.query.city) {
+    query["Address.city"] = { $regex: req.query.city, $options: "i" };
+  }
+
+  if (req.query.search) {
+    query.FirstName = { $regex: req.query.search, $options: "i" };
+  }
+
+  // sort
+  const sortBy = req.query.sortBy || "createdAt";
+  const order = req.query.order === "asc" ? 1 : -1;
+
+  // Pagination
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const customers = await Customer.find(query)
+    .sort({ [sortBy]: order })
+    .skip(skip)
+    .limit(limit);
+
   res.json(customers);
 });
 
 // @desc Add new customer
 // @route POST /api/customers
 // @access Private
-module.exports.AddCustomer = asyncHandler(async (req, res) => {
+export const AddCustomer = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No image provided" });
   }
@@ -52,7 +89,7 @@ module.exports.AddCustomer = asyncHandler(async (req, res) => {
 // @desc Delete customer
 // @route DELETE /api/customers/:id
 // @access Private
-module.exports.DeleteCustomer = asyncHandler(async (req, res) => {
+export const DeleteCustomer = asyncHandler(async (req, res) => {
   const customerId = req.params.id;
   const customer = await Customer.findByIdAndDelete(customerId);
 
@@ -71,7 +108,7 @@ module.exports.DeleteCustomer = asyncHandler(async (req, res) => {
 // @desc Update customer
 // @route PUT /api/customers/:id
 // @access Private
-module.exports.UpdateCustomer = asyncHandler(async (req, res) => {
+export const UpdateCustomer = asyncHandler(async (req, res) => {
   const { id: customerId } = req.params;
   const updates = { ...req.body };
 
@@ -108,7 +145,7 @@ module.exports.UpdateCustomer = asyncHandler(async (req, res) => {
 // @desc Count customers
 // @route GET /api/customers/count
 // @access Private
-module.exports.CountCustomers = asyncHandler(async (req, res) => {
+export const CountCustomers = asyncHandler(async (req, res) => {
   const count = await Customer.countDocuments();
   res.json({ count });
 });

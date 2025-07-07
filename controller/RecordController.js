@@ -1,18 +1,20 @@
-const {
+// controller/RecordActivityController.js
+
+import {
   RecordActivity,
   validateCreateActivity,
-} = require("../models/RecordActivity");
-const asyncHandler = require("express-async-handler");
-const {
+} from "../models/RecordActivity.js";
+import asyncHandler from "express-async-handler";
+import {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
-} = require("../utils/Cloudinary");
-const logger = require("../utils/logger");
+} from "../utils/Cloudinary.js";
+import logger from "../utils/logger.js";
 
 // @desc Get all Record Activities
 // @route GET /api/record-activities
 // @access Private
-module.exports.GetRecordActivity = asyncHandler(async (req, res) => {
+export const GetRecordActivity = asyncHandler(async (req, res) => {
   const records = await RecordActivity.find();
   res.json(records);
 });
@@ -20,7 +22,7 @@ module.exports.GetRecordActivity = asyncHandler(async (req, res) => {
 // @desc Add Record Activity
 // @route POST /api/record-activities
 // @access Private
-module.exports.AddRecordActivity = asyncHandler(async (req, res) => {
+export const AddRecordActivity = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No image provided" });
   }
@@ -51,10 +53,12 @@ module.exports.AddRecordActivity = asyncHandler(async (req, res) => {
 // @desc Delete Record Activity
 // @route DELETE /api/record-activities/:id
 // @access Private
-module.exports.DeleteRecordActivity = asyncHandler(async (req, res) => {
+export const DeleteRecordActivity = asyncHandler(async (req, res) => {
   const recordId = req.params.id;
   if (!recordId) {
-    return res.status(400).json({ message: "No RecordActivity ID provided" });
+    return res
+      .status(400)
+      .json({ message: "No RecordActivity ID provided" });
   }
 
   const deletedRecord = await RecordActivity.findByIdAndDelete(recordId);
@@ -72,10 +76,12 @@ module.exports.DeleteRecordActivity = asyncHandler(async (req, res) => {
 // @desc Update Record Activity
 // @route PUT /api/record-activities/:id
 // @access Private
-module.exports.UpdateRecordActivity = asyncHandler(async (req, res) => {
+export const UpdateRecordActivity = asyncHandler(async (req, res) => {
   const recordId = req.params.id;
   if (!recordId) {
-    return res.status(400).json({ message: "No RecordActivity ID provided" });
+    return res
+      .status(400)
+      .json({ message: "No RecordActivity ID provided" });
   }
 
   const existingRecord = await RecordActivity.findById(recordId);
@@ -116,7 +122,7 @@ module.exports.UpdateRecordActivity = asyncHandler(async (req, res) => {
 // @desc Count Record Activities
 // @route GET /api/record-activities/count
 // @access Private
-module.exports.CountRecordActivity = asyncHandler(async (req, res) => {
+export const CountRecordActivity = asyncHandler(async (req, res) => {
   const count = await RecordActivity.countDocuments();
   res.json({ count });
 });

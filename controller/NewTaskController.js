@@ -1,10 +1,12 @@
-const { NewTask, validateCreateTask } = require("../models/NewTask");
-const asyncHandler = require("express-async-handler");
+// controller/TaskController.js
+
+import { NewTask, validateCreateTask } from "../models/NewTask.js";
+import asyncHandler from "express-async-handler";
 
 // @desc Get all Task
 // @route GET /api/deals
 // @access Private
-module.exports.GetTask = asyncHandler(async (req, res) => {
+export const GetTask = asyncHandler(async (req, res) => {
   const Task = await NewTask.find();
   res.json(Task);
 });
@@ -12,7 +14,7 @@ module.exports.GetTask = asyncHandler(async (req, res) => {
 // @desc Add Deal
 // @route POST /api/deals
 // @access Private
-module.exports.AddTask = asyncHandler(async (req, res) => {
+export const AddTask = asyncHandler(async (req, res) => {
   const { error } = validateCreateTask(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
@@ -26,7 +28,7 @@ module.exports.AddTask = asyncHandler(async (req, res) => {
 // @desc Delete Deal
 // @route DELETE /api/deals/:id
 // @access Private
-module.exports.DeleteTask = asyncHandler(async (req, res) => {
+export const DeleteTask = asyncHandler(async (req, res) => {
   const TaskId = req.params.id;
   if (!TaskId) {
     return res.status(400).json({ message: "No Task ID provided" });
@@ -41,7 +43,7 @@ module.exports.DeleteTask = asyncHandler(async (req, res) => {
 // @desc Update Deal
 // @route PUT /api/deals/:id
 // @access Private
-module.exports.UpdateDeal = asyncHandler(async (req, res) => {
+export const UpdateDeal = asyncHandler(async (req, res) => {
   const TaskId = req.params.id;
   if (!TaskId) {
     return res.status(400).json({ message: "No Task ID provided" });
@@ -66,7 +68,7 @@ module.exports.UpdateDeal = asyncHandler(async (req, res) => {
 // @desc Count Deals
 // @route GET /api/deals/count
 // @access Private
-module.exports.CountTask = asyncHandler(async (req, res) => {
+export const CountTask = asyncHandler(async (req, res) => {
   const count = await NewTask.countDocuments();
   res.json({ count });
 });

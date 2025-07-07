@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import mongoose from "mongoose";
+import Joi from "joi";
 
 const RecordActivitySchema = new mongoose.Schema(
   {
@@ -37,7 +37,4 @@ function validateCreateActivity(data) {
   return schema.validate(data);
 }
 
-module.exports = {
-  RecordActivity,
-  validateCreateActivity
-};
+export { RecordActivity, validateCreateActivity };

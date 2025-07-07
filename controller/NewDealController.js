@@ -1,17 +1,19 @@
-const { validateCreateDeal, Deal } = require("../models/NewDeal");
-const asyncHandler = require("express-async-handler");
-const path = require("path");
-const logger = require("../utils/logger");
-const fs = require("fs");
-const {
+// controller/DealController.js
+
+import { validateCreateDeal, Deal } from "../models/NewDeal.js";
+import asyncHandler from "express-async-handler";
+import path from "path";
+import logger from "../utils/logger.js";
+import fs from "fs";
+import {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
-} = require("../utils/Cloudinary");
+} from "../utils/Cloudinary.js";
 
 // @desc Get all Deals
 // @route GET /api/deals
 // @access Private
-module.exports.GetDeal = asyncHandler(async (req, res) => {
+export const GetDeal = asyncHandler(async (req, res) => {
   const deals = await Deal.find();
   res.json(deals);
 });
@@ -19,7 +21,7 @@ module.exports.GetDeal = asyncHandler(async (req, res) => {
 // @desc Add Deal
 // @route POST /api/deals
 // @access Private
-module.exports.AddDeal = asyncHandler(async (req, res) => {
+export const AddDeal = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No image provided" });
   }
@@ -50,7 +52,7 @@ module.exports.AddDeal = asyncHandler(async (req, res) => {
 // @desc Delete Deal
 // @route DELETE /api/deal/:id
 // @access Private
-module.exports.DeleteDeal = asyncHandler(async (req, res) => {
+export const DeleteDeal = asyncHandler(async (req, res) => {
   const dealId = req.params.id;
   if (!dealId) {
     return res.status(400).json({ message: "No deal ID provided" });
@@ -71,7 +73,7 @@ module.exports.DeleteDeal = asyncHandler(async (req, res) => {
 // @desc Update Deal
 // @route PUT /api/deals/:id
 // @access Private
-module.exports.UpdateDeal = asyncHandler(async (req, res) => {
+export const UpdateDeal = asyncHandler(async (req, res) => {
   const { id: dealId } = req.params;
   const updates = { ...req.body };
 
@@ -108,7 +110,7 @@ module.exports.UpdateDeal = asyncHandler(async (req, res) => {
 // @desc Count Deals
 // @route GET /api/deals/count
 // @access Private
-module.exports.CountDeals = asyncHandler(async (req, res) => {
+export const CountDeals = asyncHandler(async (req, res) => {
   const count = await Deal.countDocuments();
   res.json({ count });
 });

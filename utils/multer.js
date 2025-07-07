@@ -1,5 +1,5 @@
-const multer = require("multer");
-const path = require("path"); // ✅ لازم السطر ده
+import multer from "multer";
+import path from "path"; 
 
 const storage = multer.memoryStorage();
 
@@ -20,4 +20,4 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-module.exports = upload;
+export default upload;

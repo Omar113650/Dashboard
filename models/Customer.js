@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import mongoose from "mongoose";
+import Joi from "joi"; // ✅ لازم يكون capital
 
 const customerSchema = new mongoose.Schema(
   {
@@ -73,23 +73,22 @@ function ValidationCreateCustomer(obj) {
     FirstName: Joi.string().min(2).max(50).required(),
     LastName: Joi.string().min(2).max(50).required(),
     Email: Joi.string().email().required(),
-    Phone: Joi.string().pattern(/^\d{10,15}$/).required(),
+    Phone: Joi.string()
+      .pattern(/^\d{10,15}$/)
+      .required(),
     Address: Joi.object({
       street: Joi.string().min(5).max(100).required(),
       city: Joi.string().min(2).max(100).required(),
       state: Joi.string().min(2).max(100).required(),
       zipCode: Joi.string().min(4).max(15).required(),
     }).required(),
-      Avatar: Joi.object({
+    Avatar: Joi.object({
       url: Joi.string().uri().allow(""),
       publicId: Joi.string().allow(null),
-    }).optional(), // 👈 أضف ده
+    }).optional(),
   });
 
   return schema.validate(obj);
 }
 
-module.exports = {
-  Customer,
-  ValidationCreateCustomer,
-};
+export { Customer, ValidationCreateCustomer };

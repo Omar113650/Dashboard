@@ -1,19 +1,22 @@
-const router = require("express").Router();
+import express from "express";
+const router = express.Router();
 
 // استدعاء الدوال من الكنترولر
-const {
+import {
   GetDeal,
   CountDeals,
   UpdateDeal,
   DeleteDeal,
   AddDeal,
-} = require("../controller/NewDealController");
-const upload = require("../utils/multer");
-const ValidateID = require("../middleware/ValidateId");
+} from "../controller/NewDealController.js";
+
+import upload from "../utils/multer.js";
+import { ValidateID } from "../middleware/ValidateId.js";
+
 router.get("/count", CountDeals);
 
 router.route("/").get(GetDeal).post(upload.single("RoomImage"), AddDeal);
 
 router.route("/:id").put(ValidateID, UpdateDeal).delete(ValidateID, DeleteDeal);
 
-module.exports = router;
+export default router;

@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+import mongoose from "mongoose";
+import Joi from "joi";
 
 const NewTaskSchema = new mongoose.Schema(
   {
@@ -30,7 +30,4 @@ function validateCreateTask(data) {
   return schema.validate(data);
 }
 
-module.exports = {
-  NewTask,
-  validateCreateTask,
-};
+export { NewTask, validateCreateTask };

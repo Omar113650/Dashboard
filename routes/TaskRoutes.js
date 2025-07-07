@@ -1,17 +1,20 @@
-const router = require("express").Router();
+import express from "express";
+const router = express.Router();
 
-const {
+import {
   GetTask,
   CountTask,
   UpdateDeal,
   DeleteTask,
   AddTask,
-} = require("../controller/NewTaskController");
-const ValidateID = require("../middleware/ValidateId");
+} from "../controller/NewTaskController.js";
+
+import { ValidateID } from "../middleware/ValidateId.js";
+
 router.get("/count", CountTask);
 
 router.route("/").get(GetTask).post(AddTask);
 
 router.route("/:id").put(ValidateID, UpdateDeal).delete(ValidateID, DeleteTask);
 
-module.exports = router;
+export default router;

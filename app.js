@@ -1,19 +1,25 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const connectDB = require("./config/connectDB");
-const { errorHandler, notfound } = require("./middleware/error");
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/connectDB.js";
+import { errorHandler, notfound } from "./middleware/error.js";
+
+import CustomerRoutes from "./routes/CustomerRoutes.js";
+import DealRoutes from "./routes/DealRoutes.js";
+import TaskRoutes from "./routes/TaskRoutes.js";
+import RecordActivityRoutes from "./routes/RecordActivityRoutes.js";
+
 dotenv.config({ path: "./config.env" });
 
 connectDB();
 
 const app = express();
-
 app.use(express.json());
 
-app.use("/api/customer", require("./routes/CustomerRoutes"));
-app.use("/api/deal", require("./routes/DealRoutes"));
-app.use("/api/task", require("./routes/TaskRoutes"));
-app.use("/api/RecordActivity", require("./routes/RecordActivityRoutes"));
+app.use("/api/customer", CustomerRoutes);
+app.use("/api/deal", DealRoutes);
+app.use("/api/task", TaskRoutes);
+app.use("/api/RecordActivity", RecordActivityRoutes);
+
 app.use(notfound);
 app.use(errorHandler);
 
