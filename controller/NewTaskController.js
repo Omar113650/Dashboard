@@ -7,7 +7,23 @@ import asyncHandler from "express-async-handler";
 // @route GET /api/deals
 // @access Private
 export const GetTask = asyncHandler(async (req, res) => {
-  const Task = await NewTask.find();
+  const query = {};
+  // search
+  if (req.query.search) {
+    const regex = new RegExp(req.query.search, "i");
+    query.$or = [{ DueDate: regex }];
+  }
+
+  // sort
+  const sortBy = req.query.sortBy || "createdAt";
+  const order = req.query.order === "asc" ? 1 : -1;
+
+  const Task = await NewTask.find().sort({ [sortBy]: order });
+
+  if (!Task) {
+    return res.status(404).json({ message: "no found any deals " });
+  }
+
   res.json(Task);
 });
 

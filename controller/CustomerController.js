@@ -1,5 +1,3 @@
-// controller/CustomerController.js
-
 import asyncHandler from "express-async-handler";
 import { Customer, ValidationCreateCustomer } from "../models/Customer.js";
 import {
@@ -12,7 +10,6 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
-// ⛔ لأننا بنستخدم ES Modules، لازم نستخدم __dirname بالطريقة دي
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -22,7 +19,6 @@ const __dirname = path.dirname(__filename);
 export const GetCustomer = asyncHandler(async (req, res) => {
   const query = {};
 
-  // ✅ تقدر تستخدم كل الشروط مع بعض، مش لازم else if
   if (req.query.Phone) {
     query.Phone = req.query.Phone;
   }
@@ -48,6 +44,10 @@ export const GetCustomer = asyncHandler(async (req, res) => {
     .sort({ [sortBy]: order })
     .skip(skip)
     .limit(limit);
+
+  if (!customers) {
+    return res.status(404).json({ message: "no found any customer " });
+  }
 
   res.json(customers);
 });

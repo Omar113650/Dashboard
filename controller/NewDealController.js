@@ -14,7 +14,29 @@ import {
 // @route GET /api/deals
 // @access Private
 export const GetDeal = asyncHandler(async (req, res) => {
-  const deals = await Deal.find();
+  const query = {};
+  // search
+  if (req.query.search) {
+    const regex = new RegExp(req.query.search, "i");
+    query.$or = [
+      { "Address.city": regex },
+      { "Address.state": regex },
+      { Progress: regex },
+      { SpecialInstructions: regex },
+    ];
+  }
+ 
+
+  // sort
+  const sortBy = req.query.sortBy || "createdAt";
+  const order = req.query.order === "asc" ? 1 : -1;
+
+  const deals = await Deal.find(query).sort({ [sortBy]: order });
+
+  if (!deals) {
+    return res.status(404).json({ message: "no found any deals " });
+  }
+
   res.json(deals);
 });
 

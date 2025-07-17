@@ -10,10 +10,14 @@ import RecordActivityRoutes from "./routes/RecordActivityRoutes.js";
 
 dotenv.config({ path: "./config.env" });
 
-connectDB();
+ await connectDB();
 
 const app = express();
 app.use(express.json());
+app.get("/", (req, res) => {
+  res.json({ message: "🚀 CRM Dashboard API is running" });
+});
+
 
 app.use("/api/customer", CustomerRoutes);
 app.use("/api/deal", DealRoutes);
@@ -22,6 +26,7 @@ app.use("/api/RecordActivity", RecordActivityRoutes);
 
 app.use(notfound);
 app.use(errorHandler);
+
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
