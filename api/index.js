@@ -10,13 +10,27 @@ import DealRoutes from "../routes/DealRoutes.js";
 import TaskRoutes from "../routes/TaskRoutes.js";
 import RecordActivityRoutes from "../routes/RecordActivityRoutes.js";
 
-// تحميل المتغيرات البيئية
 dotenv.config({ path: "./config.env" });
 
-// الاتصال بقاعدة البيانات
-await connectDB();
-
 const app = express();
+
+// ❗ نضمن الاتصال يحصل مرة واحدة
+let isConnected = false;
+
+app.use(async (req, res, next) => {
+  if (!isConnected) {
+    try {
+      await connectDB();
+      isConnected = true;
+      next();
+    } catch (error) {
+      console.error("❌ DB connection error:", error);
+      return res.status(500).json({ message: "Database connection failed" });
+    }
+  } else {
+    next();
+  }
+});
 
 app.use(express.json());
 
@@ -29,9 +43,7 @@ app.use("/api/deal", DealRoutes);
 app.use("/api/task", TaskRoutes);
 app.use("/api/RecordActivity", RecordActivityRoutes);
 
-// ميدل وير الأخطاء
 app.use(notfound);
 app.use(errorHandler);
 
-// هنا التعديل المهم
 export const handler = serverless(app);
