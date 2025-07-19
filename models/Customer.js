@@ -28,7 +28,7 @@ const customerSchema = new mongoose.Schema(
       match: [/^\S+@\S+\.\S+$/],
     },
     Phone: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
       trim: true,

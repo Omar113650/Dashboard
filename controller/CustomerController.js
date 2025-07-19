@@ -10,8 +10,6 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // @desc Get all customers
 // @route GET /api/customers
@@ -59,16 +57,15 @@ export const AddCustomer = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No image provided" });
   }
+
   const { error } = ValidationCreateCustomer(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
-  const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
 
   const result = await cloudinaryUploadImage(req.file.buffer);
 
   if (!result.secure_url) {
-    fs.unlinkSync(imagePath);
     logger.error("Cloudinary upload failed: %o", result);
     return res.status(500).json({ message: "Image upload to cloud failed" });
   }
@@ -80,8 +77,6 @@ export const AddCustomer = asyncHandler(async (req, res) => {
       publicId: result.public_id,
     },
   });
-
-  fs.unlinkSync(imagePath);
 
   res.status(201).json({ customer: newCustomer, message: "Success" });
 });
