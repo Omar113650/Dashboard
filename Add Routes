@@ -1,0 +1,27 @@
+Customer
+POST:http://localhost:8000/api/customer
+GET:http://localhost:8000/api/customer
+DELETE:http://localhost:8000/api/customer/:id  (687c2c43d279c3756c09bb64)
+UPDATA: //localhost:8000/api/customer/:id  (687c2c43d279c3756c09bb64)
+
+
+Deal 
+POST://localhost:8000/api/deal
+GET://localhost:8000/api/deal
+DELETE://localhost:8000/api/deal/:id
+UPDATA://localhost:8000/api/deal/:id
+
+Task 
+POST://localhost:8000/api/task 
+GET: //localhost:8000/api/task 
+DELETE: //localhost:8000/api/task/:id
+UPDATA: //localhost:8000/api/task/:id
+
+
+
+
+RecordActivity 
+POST://localhost:8000/api/RecordActivity
+GET://localhost:8000/api/RecordActivity
+DELETE: //localhost:8000/api/RecordActivity/:id
+UPDATA: //localhost:8000/api/RecordActivity/:id
